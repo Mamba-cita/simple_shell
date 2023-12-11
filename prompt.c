@@ -1,5 +1,4 @@
 #include "shell.h"
-#include "shell1.h"
 
 /**
  * open_file - opens a file and updates the file descriptor in info struct

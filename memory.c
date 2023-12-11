@@ -1,5 +1,4 @@
 #include "shell.h"
-#include "shell1.h"
 
 /**
  * free_pointer - free the pointer memory and give it a NULL value

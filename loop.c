@@ -1,5 +1,4 @@
 #include "shell.h"
-#include "shell1.h"
 
 /**
  * loop_shell - main shell loop
