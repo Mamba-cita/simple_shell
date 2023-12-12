@@ -1,6 +1,47 @@
 #include "shell.h"
 
 /**
+ * del_nodes_at_index - remove the node at a given index
+ *
+ * @head: pointer to the first node
+ * @index: holds the index of the node to remove
+ *
+ * Return: 1(SUCESS), or 0 (FAILURE)
+ */
+int del_nodes_at_index(list_t **head, unsigned int index)
+{
+	list_t *ptr, *prev_node;
+	unsigned int i = 0;
+
+	if (!head || !*head)
+		return (0);
+
+	if (!index)
+	{
+		ptr = *head;
+		*head = (*head)->next;
+		free(ptr->str);
+		free(ptr);
+		return (1);
+	}
+	ptr = *head;
+	while (ptr)
+	{
+		if (i == index)
+		{
+			prev_node->next = ptr->next;
+			free(ptr->str);
+			free(ptr);
+			return (1);
+		}
+		i++;
+		prev_node = ptr;
+		ptr = ptr->next;
+	}
+	return (0);
+}
+
+/**
  * add_nodes - put a node at the start of the list
  *
  * @head: pointer to head node
@@ -95,70 +136,4 @@ size_t print_lists_str(const list_t *h)
 		i++;
 	}
 	return (i);
-}
-
-/**
- * del_nodes_at_index - remove the node at a given index
- *
- * @head: pointer to the first node
- * @index: holds the index of the node to remove
- *
- * Return: 1(SUCESS), or 0 (FAILURE)
- */
-int del_nodes_at_index(list_t **head, unsigned int index)
-{
-	list_t *ptr, *prev_node;
-	unsigned int i = 0;
-
-	if (!head || !*head)
-		return (0);
-
-	if (!index)
-	{
-		ptr = *head;
-		*head = (*head)->next;
-		free(ptr->str);
-		free(ptr);
-		return (1);
-	}
-	ptr = *head;
-	while (ptr)
-	{
-		if (i == index)
-		{
-			prev_node->next = ptr->next;
-			free(ptr->str);
-			free(ptr);
-			return (1);
-		}
-		i++;
-		prev_node = ptr;
-		ptr = ptr->next;
-	}
-	return (0);
-}
-
-/**
- * free_lists - empty all the nodes of a linked list
- *
- * @headd: pointer to head the node
- *
- * Return: void
- */
-void free_lists(list_t **headd)
-{
-	list_t *curr_node, *next_node, *head;
-
-	if (!headd || !*headd)
-		return;
-	head = *headd;
-	curr_node = head;
-	while (curr_node)
-	{
-		next_node = curr_node->next;
-		free(curr_node->str);
-		free(curr_node);
-		curr_node = next_node;
-	}
-	*headd = NULL;
 }
