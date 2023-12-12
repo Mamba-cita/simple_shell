@@ -1,80 +1,70 @@
 #include "shell.h"
 
 /**
- * restore_vars - change the vars in the tokenized string
- * @info: the structure parameter
+ * check_chain - checks we should continue chaining based on last status
+ * @info: the parameter struct
+ * @buf: the char buffer
+ * @p: address of current position in buf
+ * @i: starting position in buf
+ * @len: length of buf
  *
- * Return: 1 (if change), otherwise 0
+ * Return: Void
  */
-int restore_vars(info_t *info)
+void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len)
 {
-    int index = 0;
+	size_t j = *p;
 
-    for (index = 0; info->argv[index]; index++)
-    {
-        if (info->argv[index][0] != '$' || !info->argv[index][1])
-            continue;
+	if (info->cmd_buf_type == CMD_AND)
+	{
+		if (info->status)
+		{
+			buf[i] = 0;
+			j = len;
+		}
+	}
+	if (info->cmd_buf_type == CMD_OR)
+	{
+		if (!info->status)
+		{
+			buf[i] = 0;
+			j = len;
+		}
+	}
 
-        if (!_strcmp(info->argv[index], "$?"))
-        {
-            restore_string(&(info->argv[index]),
-                           _strdupli(convert_nums(info->status, 10, 0)));
-            continue;
-        }
-        if (!_strcmp(info->argv[index], "$$"))
-        {
-            restore_string(&(info->argv[index]),
-                           _strdupli(convert_nums(getpid(), 10, 0)));
-            continue;
-        }
-        list_t *node = nodes_start_with(info->env, &info->argv[index][1], '=');
-        if (node)
-        {
-            restore_string(&(info->argv[index]),
-                           _strdupli(_strcharr(node->str, '=') + 1));
-            continue;
-        }
-        restore_string(&info->argv[index], _strdupli(""));
-    }
-    return (0);
+	*p = j;
 }
 
 /**
- * restore_alias - rename an alias in the tokenized string
- * @info: the structure parameter.
+ * is_chain - test if current char in buffer is a chain delimeter
+ * @info: the parameter struct
+ * @buf: the char buffer
+ * @p: address of current position in buf
  *
- * Return: 1 (if rename), otherwise 0
+ * Return: 1 if chain delimeter, 0 otherwise
  */
-int restore_alias(info_t *info)
+int is_chain(info_t *info, char *buf, size_t *p)
 {
-    for (int index = 0; index < 10; index++)
-    {
-        list_t *node = nodes_start_with(info->alias, info->argv[0], '=');
-        if (!node)
-            return (0);
+	size_t j = *p;
 
-        free(info->argv[0]);
-        char *p = _strchar(node->str, '=');
-        if (!p)
-            return (0);
-        p = _strdupli(p + 1);
-        if (!p)
-            return (0);
-        info->argv[0] = p;
-    }
-    return (1);
-}
-
-/**
- * restore_string - changes/replaces the string
- * @old: the old string address
- * @new: the new string
- *
- * Return: 1 (if changes), otherwise 0
- */
-int restore_string(char **old, char *new)
-{
-    free(*old);
-    *old = new;
-    return (1);
+	if (buf[j] == '|' && buf[j + 1] == '|')
+	{
+		buf[j] = 0;
+		j++;
+		info->cmd_buf_type = CMD_OR;
+	}
+	else if (buf[j] == '&' && buf[j + 1] == '&')
+	{
+		buf[j] = 0;
+		j++;
+		info->cmd_buf_type = CMD_AND;
+	}
+	else if (buf[j] == ';')
+	{
+		buf[j] = 0;
+		info->cmd_buf_type = CMD_CHAIN;
+	}
+	else
+		return (0);
+	*p = j;
+	return (1);
 }
