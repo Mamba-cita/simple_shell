@@ -1,7 +1,8 @@
 #include "shell.h"
 
 /**
- * isa_chain - test the chain delimiter for the current char in the buffer
+ * isa_chain - test the chain delimiter,
+ * for the current char in the buffer.
  *
  * @info: the structure parameter.
  * @buf: the buffer for the character.
@@ -25,9 +26,9 @@ int isa_chain(info_t *info, char *buf, size_t *p)
 		index++;
 		info->cmd_buf_type = CMD_AND;
 	}
-	else if (buf[index] == ';') 
+	else if (buf[index] == ';')
 	{
-		buf[index] = 0; 
+		buf[index] = 0;
 		info->cmd_buf_type = CMD_CHIAN;
 	}
 	else
@@ -37,7 +38,8 @@ int isa_chain(info_t *info, char *buf, size_t *p)
 }
 
 /**
- * find_chain - decide if chaining should continue based on the last result
+ * find_chain - decide if chaining,
+ * should continue based on the last result.
  * @info: the structure parameter.
  * @buf: the buffer for character.
  * @p: position of the current address in the buffer.
