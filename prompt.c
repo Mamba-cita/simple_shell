@@ -2,8 +2,8 @@
 
 /**
  * main - Entry point for the shell program
- * @argc: Number of arguments
- * @argv: Array of strings containing the arguments
+ * @gc: Number of arguments
+ * @av: Array of strings containing the arguments
  * Return: EXIT_SUCCESS on success, EXIT_FAILURE on failure
  */
 
