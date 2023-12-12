@@ -28,7 +28,7 @@ char *gets_history_files(info_t *info)
 /**
  * writes_history - make a new file, if exists add to existing file
  *
- * @info: the structure parameter 
+ * @info: the structure parameter.
  *
  * Return: 1 on success, else -1
  */
@@ -45,7 +45,7 @@ int writes_history(info_t *info)
 	free(filename);
 	if (fdd == -1)
 		return (-1);
-	for (curr_node = info->history; curr_node; curr_node = 
+	for (curr_node = info->history; curr_node; curr_node =
 curr_node->next)
 	{
 		_putsfds(curr_node->str, fdd);
@@ -65,7 +65,7 @@ curr_node->next)
  */
 int readd_history(info_t *info)
 {
-	int i; 
+	int i;
 int last = 0, linecounts = 0;
 	ssize_t fdd, rdlenght, fsize = 0;
 	struct stat st;
@@ -110,7 +110,7 @@ int last = 0, linecounts = 0;
 /**
  * built_history_list - append a entry to linked list history
  *
- * @info: used to maintain struct containing potential arguments. 
+ * @info: used to maintain struct containing potential arguments.
  * @buff: the buffer to store the history
  * @linecount: the history linecount, histcount
  *
