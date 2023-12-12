@@ -67,35 +67,3 @@ void find_chain(info_t *info, char *buf, size_t *p, size_t index, size_t len)
         }
     }
 }
-
-/**
- * restore_alias - rename an alias in the tokenized string
- *
- * @info: the structure parameter.
- *
- * Return: 1 (if rename), otherwise 0
- */
-int restore_alias(info_t *info)
-{
-    list_t *node;
-    char *p;
-
-    for (int index = 0; index < 10; index++)
-    {
-        node = nodes_start_with(info->alias, info->argv[0], '=');
-        if (!node)
-        {
-            return (0);
-        }
-
-        free(info->argv[0]);
-        p = _strchar(node->str, '=');
-        if (!p)
-            return (0);
-        p = _strdupli(p + 1);
-        if (!p)
-            return (0);
-        info->argv[0] = p;
-    }
-    return (1);
-}
