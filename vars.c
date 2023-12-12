@@ -25,9 +25,9 @@ int isa_chain(info_t *info, char *buf, size_t *p)
 		index++;
 		info->cmd_buf_type = CMD_AND;
 	}
-	else if (buf[index] == ';') 
+	else if (buf[index] == ';')
 	{
-		buf[index] = 0; 
+		buf[index] = 0;
 		info->cmd_buf_type = CMD_CHIAN;
 	}
 	else
