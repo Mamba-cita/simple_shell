@@ -119,7 +119,7 @@ void check_cmd(info_t *info)
 }
 
 /**
- * copy_cmd - copy the thread to run cmd
+ * fork_cmd - copy the thread to run cmd
  * @info: return info struct
  *
  * Return: (void)
