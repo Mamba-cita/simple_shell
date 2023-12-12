@@ -48,7 +48,7 @@ int _strcmp(char *s1, char *s2)
  * @haystack: hold the string to be searched.
  * @needle: hold the string to find
  *
- * Return: pointer of next char of the search string, 
+ * Return: pointer of next char of the search string,
  * otherwise NULL.
  */
 char *start(const char *haystack, const char *needle)
