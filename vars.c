@@ -25,9 +25,9 @@ int isa_chain(info_t *info, char *buf, size_t *p)
 		index++;
 		info->cmd_buf_type = CMD_AND;
 	}
-	else if (buf[index] == ';')
+	else if (buf[index] == ';') 
 	{
-		buf[index] = 0;
+		buf[index] = 0; 
 		info->cmd_buf_type = CMD_CHIAN;
 	}
 	else
@@ -35,9 +35,9 @@ int isa_chain(info_t *info, char *buf, size_t *p)
 	*p = index;
 	return (1);
 }
+
 /**
- * handle_chain_based_on_status - decide if chaining should continue based on the last result
- *
+ * find_chain - decide if chaining should continue based on the last result
  * @info: the structure parameter.
  * @buf: the buffer for character.
  * @p: position of the current address in the buffer.
@@ -46,28 +46,28 @@ int isa_chain(info_t *info, char *buf, size_t *p)
  *
  * Return: (void)
  */
-void handle_chain_based_on_status(info_t *info, char *buf, size_t *p, size_t i, size_t len)
+void find_chain(info_t *info, char *buf, size_t *p, size_t index, size_t len)
 {
-    size_t current_position = *p;
+	size_t index = *p;
 
-    if (info->cmd_buf_type == CMD_AND)
-    {
-        if (info->status)
-        {
-            buf[i] = 0;
-            current_position = len;
-        }
-    }
-    if (info->cmd_buf_type == CMD_OR)
-    {
-        if (!info->status)
-        {
-            buf[i] = 0;
-            current_position = len;
-        }
-    }
+	if (info->cmd_buf_type == CMD_AND)
+	{
+		if (info->status)
+		{
+			buf[i] = 0;
+			index = len;
+		}
+	}
+	if (info->cmd_buf_type == CMD_OR)
+	{
+		if (!info->status)
+		{
+			buf[i] = 0;
+			index = len;
+		}
+	}
 
-    *p = current_position;
+	*p = index;
 }
 
 /**
