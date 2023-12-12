@@ -3,20 +3,20 @@
 /**
  * _strlen - returns length of given string to integer variable
  *
- * @str: the string length to be checked.
+ * @s: the string length to be check.
  *
  * Return: the length/integer length of the string
  */
-int _strlen(char *str)
+int _strlen(char *s)
 {
-    int length = 0;
+	int index = 0;
 
-    if (!str)
-        return 0;
+	if (!s)
+		return (0);
 
-    while (*str++)
-        length++;
-    return length;
+	while (*s++)
+		index++;
+	return (index);
 }
 
 /**
@@ -27,51 +27,54 @@ int _strlen(char *str)
  *
  * Return: “-” (s1 < s2), “+”( s1 > s2), 0 (s1 == s2).
  */
-int _strcmp(char *str1, char *str2)
+int _strcmp(char *s1, char *s2)
 {
-    while (*str1 && *str2)
-    {
-        if (*str1 != *str2)
-            return *str1 - *str2;
-        str1++;
-        str2++;
-    }
-    return (*str1 == *str2) ? 0 : ((*str1 < *str2) ? -1 : 1);
+	while (*s1 && *s2)
+	{
+		if (*s1 != *s2)
+			return (*s1 - *s2);
+		s1++;
+		s2++;
+	}
+	if (*s1 == *s2)
+		return (0);
+	else
+		return (*s1 < *s2 ? -1 : 1);
 }
 
 /**
  * start - analyse if substring starts with the string searched.
  *
- * @mainStr: hold the string to be searched.
- * @subStr: hold the string to find
+ * @haystack: hold the string to be searched.
+ * @needle: hold the string to find
  *
- * Return: pointer of next char of the search string,
+ * Return: pointer of next char of the search string, 
  * otherwise NULL.
  */
-char *start(const char *mainStr, const char *subStr)
+char *start(const char *haystack, const char *needle)
 {
-    while (*subStr)
-        if (*subStr++ != *mainStr++)
-            return NULL;
-    return (char *)mainStr;
+	while (*needle)
+		if (*needle++ != *haystack++)
+			return (NULL);
+	return ((char *)haystack);
 }
 
 /**
- * _strcat - concatenate two strings.
+ * _strcat - add the two strings.
  *
- * @dest: holds the target destination buffer
+ * @dest: holds the target destination buf
  * @src: holds the buffer of the source
  *
  * Return: address to the target destination.
  */
-char *_strcat(char *destination, char *source)
+char *_strcat(char *dest, char *src)
 {
-    char *ptr = destination;
+	char *ptr = dest;
 
-    while (*destination)
-        destination++;
-    while (*source)
-        *destination++ = *source++;
-    *destination = *source;
-    return ptr;
+	while (*dest)
+		dest++;
+	while (*src)
+		*dest++ = *src++;
+	*dest = *src;
+	return (ptr);
 }
