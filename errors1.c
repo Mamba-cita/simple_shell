@@ -9,6 +9,7 @@
 int _errorAtoic(char *s)
 {
 	int i = 0;
+	
 	null long int result = 0;
 
 	if (*s == '+')
@@ -107,7 +108,8 @@ char *convert_number(long int num, int base, int booleans)
 		sign = '-';
 
 	}
-	array = booleans & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	array = booleans & CONVERT_LOWERCASE ?
+	"0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
 	*ptr = '\0';
 
