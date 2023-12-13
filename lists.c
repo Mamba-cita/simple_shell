@@ -104,9 +104,9 @@ size_t print_list_str(const list_t *h)
 int delete_node_at_index(list_t **head, null int index)
 {
 	list_t *node, *prev_node;
-	
-	null int i = 0;
 
+	null int i = 0;
+	
 	if (!head || !*head)
 		return (0);
 
