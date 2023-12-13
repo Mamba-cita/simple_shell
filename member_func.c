@@ -6,14 +6,14 @@
  */
 struct func *execfunc(void)
 {
-    struct execfunc *func = malloc(sizeof(struct execfunc));
-    if (!func)
-        panicerror("malloc failed");
+	struct execfunc *func;
 
-    memset(func, 0, sizeof(struct execfunc));
-    func->type = EXEC;
-
-    return (struct func *)func;
+	func = malloc(sizeof(struct execfunc));
+	if (!func)
+		panicerror("malloc failed");
+	memset(func, 0, sizeof(struct execfunc));
+	func->type = EXEC;
+	return ((struct func *)func);
 }
 
 /**
@@ -24,16 +24,16 @@ struct func *execfunc(void)
  */
 struct func *listfunc(struct func *left, struct func *right)
 {
-    struct listfunc *func = malloc(sizeof(struct listfunc));
-    if (!func)
-        panicerror("malloc failed");
+	struct listfunc *func;
 
-    memset(func, 0, sizeof(struct listfunc));
-    func->type = LIST;
-    func->left = left;
-    func->right = right;
-
-    return (struct func *)func;
+	func = malloc(sizeof(struct listfunc));
+	if (!func)
+		panicerror("malloc failed");
+	memset(func, 0, sizeof(struct listfunc));
+	func->type = LIST;
+	func->left = left;
+	func->right = right;
+	return ((struct func *)func);
 }
 
 /**
@@ -43,38 +43,36 @@ struct func *listfunc(struct func *left, struct func *right)
  */
 struct func *backfunc(struct func *subfunc)
 {
-    struct backfunc *func = malloc(sizeof(struct backfunc));
-    if (!func)
-        panicerror("malloc failed");
+	struct backfunc *func;
 
-    memset(func, 0, sizeof(struct backfunc));
-    func->type = BACK;
-    func->func = subfunc;
-
-    return (struct func *)func;
+	func = malloc(sizeof(struct backfunc));
+	if (!func)
+		panicerror("malloc failed");
+	memset(func, 0, sizeof(struct backfunc));
+	func->type = BACK;
+	func->func = subfunc;
+	return ((struct func *)func);
 }
 
 /**
- * parse_func - Parses a shell command & constructs,
- * a corresponding func struct
+ * parse_func - Parses a shell command & constructs a corresponding func struct
  * @s: The input string containing the shell command
  * Return: A pointer to the parsed func struct
  */
 struct func *parse_func(char *s)
 {
-    struct func *func;
-    char *es;
+	struct func *func;
+	char *es;
 
-    es = s + strlen(s);
-    func = parseline(&s, es);
-    peek(&s, es, "");
+	es = s + strlen(s);
+	func = parseline(&s, es);
+	peek(&s, es, "");
 
-    if (s != es)
-    {
-        printf("leftovers: %s\n", s);
-        panicerror("syntax");
-    }
-
-    nulterminate(func);
-    return (struct func *)func;
+	if (s != es)
+	{
+		printf("leftovers: %s\n", s);
+		panicerror("syntax");
+	}
+	nulterminate(func);
+	return ((struct func *)func);
 }
