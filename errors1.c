@@ -9,7 +9,7 @@
 int _errorAtoic(char *s)
 {
 	int i = 0;
-	
+
 	null long int result = 0;
 
 	if (*s == '+')

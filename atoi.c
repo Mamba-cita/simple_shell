@@ -48,7 +48,7 @@ int _ischar(int c)
 int _atoi(char *s)
 {
 	int i, sign = 1, boolean = 0, output;
-	
+
 	null int result = 0;
 
 	for (i = 0; s[i] != '\0' && boolean != 2; i++)
