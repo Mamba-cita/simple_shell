@@ -1,44 +1,97 @@
-#include "shell.h"
+#include "linux.h"
 
 /**
- * main - Entry point for the shell program
- * @agc: Number of arguments
- * @av: Array of strings containing the arguments
- * Return: EXIT_SUCCESS on success, EXIT_FAILURE on failure
+ * main - This is the main function for our shell program.
+ * Return: Returns nothing(void)
+ * Description: This is the main function for our shell program.
  */
 
-int main(int agc, char **av)
+int main(void)
 {
-	info_t info[] = { INFO_INIT };
-	int fdd = 2;
+	static char buffer[100];
 
-	asm ("mov %1, %0\n\t"
-			"add $3, %0"
-			: "=r" (fdd)
-			: "r" (fdd));
-
-	if (ac == 2)
+	while (get_func(buffer, sizeof(buffer)) >= 0)
 	{
-		fdd = open(av[1], O_RDONLY);
-		if (fdd == -1)
+		if (buffer[0] == 'c' && buffer[1] == 'd')
 		{
-			if (errno == EACCES)
-				exit(126);
-			if (errno == ENOENT)
-			{
-				_errputs(av[0]);
-				_errputs(": 0: Can't open ");
-				_errputs(av[1]);
-				_errputchar('\n');
-				_errputchar(BUFF_FLUSH);
-				exit(127);
-			}
-			return (EXIT_FAILURE);
+			char *path = NULL;
+
+			if (strlen(buffer) > 2)
+				path = buffer + 3;
+			changedirectory(path);
 		}
-		info->readfd = fdd;
+		else if (buffer[0] == 'e' && buffer[1] == 'x'
+		&& buffer[2] == 'i' && buffer[3] == 't')
+		{
+			char *exargs = NULL;
+
+			if (strlen(buffer) > 4)
+				exargs = buffer + 5;
+			myexit(exargs);
+		}
+		else if (buffer[0] == 'e' && buffer[1] == 'n' && buffer[2] == 'v')
+			envir();
+		else if (fork_func() == 0)
+			run_func(parse_func(buffer));
+		wait(0);
 	}
-	populate_environ_list(info);
-	_read_history(info);
-	loop_hsh(info, av);
-	return (EXIT_SUCCESS);
+	exit(0);
+}
+
+/* Helper functions */
+
+/**
+ * panicerror - Prints out an error message and terminates the process
+ * @s: The error to print out
+ * Return: Returns nothing(void)
+ */
+void panicerror(char *s)
+{
+	printf("%s\n", s);
+	exit(1);
+}
+
+/**
+ * fork_func - Wrapper for the fork system call
+ * Return: process id
+ *
+ * Description: Wrapper for the fork system call
+ */
+int fork_func(void)
+{
+	pid_t pid;
+
+	pid = fork();
+	if (pid == -1)
+	{
+		panicerror("fork");
+	}
+	return (pid);
+}
+
+/**
+ * get_func - Prints the shell prompt and used in the main control loop
+ * @buffer: The buffer character array containing the input
+ * @nbuffer: Number of characters in the buffer array
+ * Return: Returns 0 on Success
+ */
+
+int get_func(char *buffer, int nbuffer)
+{
+	size_t len;
+
+	write(0, "$ ", 2);
+	memset(buffer, 0, nbuffer);
+
+	fgets(buffer, nbuffer, stdin);
+
+	len = strlen(buffer);
+
+	if (len > 0 && buffer[len - 1] == '\n')
+		buffer[len - 1] = '\0';
+	if (buffer[0] == '#')
+		buffer[0] = '\0';
+	if (buffer[0] == 0)
+		return (-1);
+	return (0);
 }
