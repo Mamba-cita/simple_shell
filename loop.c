@@ -1,38 +1,38 @@
 #include "shell.h"
 
 /**
- * loop_hsh - main shell loop
+ * hsh - main shell loop
  * @info: the parameter & return info struct
  * @av: the argument vector from main()
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int loop_hsh(info_t *info, char **av)
+int hsh(info_t *info, char **av)
 {
 	ssize_t r = 0;
 	int builtin_ret = 0;
 
 	while (r != -1 && builtin_ret != -2)
 	{
-		clear_the_info(info);
-		if (interactives(info))
+		clear_info(info);
+		if (interactive(info))
 			_puts("$ ");
-		_errputchar(BUFF_FLUSH);
-		r = gets_inputs(info);
+		_eputchar(BUF_FLUSH);
+		r = get_input(info);
 		if (r != -1)
 		{
-			set_the_info(info, av);
-			builtin_ret = check_builtin(info);
+			set_info(info, av);
+			builtin_ret = find_builtin(info);
 			if (builtin_ret == -1)
-				check_cmd(info);
+				find_cmd(info);
 		}
-		else if (interactives(info))
+		else if (interactive(info))
 			_putchar('\n');
-		free_the_info(info, 0);
+		free_info(info, 0);
 	}
-	writes_history(info);
-	free_the_info(info, 1);
-	if (!interactives(info) && info->status)
+	write_history(info);
+	free_info(info, 1);
+	if (!interactive(info) && info->status)
 		exit(info->status);
 	if (builtin_ret == -2)
 	{
@@ -44,24 +44,26 @@ int loop_hsh(info_t *info, char **av)
 }
 
 /**
- * check_builtin - checks for a builtin command
+ * find_builtin - finds a builtin command
+ * @info: the parameter & return info struct
  *
- * @info: it return the structure info
- *
- * Return: -1 if builtin not found, 0 if builtin is executed successfully.
+ * Return: -1 if builtin not found,
+ * 	0 if builtin executed successfully,
+ * 	1 if builtin found but not successful,
+ * 	2 if builtin signals exit()
  */
-int check_builtin(info_t *info)
+int find_builtin(info_t *info)
 {
 	int i, built_in_ret = -1;
 	builtin_table builtintbl[] = {
-		{"exit", _my_exits},
-		{"env", _my_environ},
-		{"help", _myhelpp},
-		{"history", _myhistory},
-		{"setenv", _myset_environ},
-		{"unsetenv", _myunset_environ},
-		{"cd", _my_cds},
-		{"alias", _my_aliases},
+		{"exit", _exitShell},
+		{"env", _myenv},
+		{"help", _myhelp},
+		{"history", _ logs},
+		{"setenv", _mysetenv},
+		{"unsetenv", _myunsetenv},
+		{"cd", _ chdir},
+		{"alias", _myalias},
 		{NULL, NULL}
 	};
 
@@ -76,44 +78,82 @@ int check_builtin(info_t *info)
 }
 
 /**
- * check_cmd - check for a command in PATH
- *
- * @info: return a info struct
+ * find_cmd - finds a command in PATH
+ * @info: the parameter & return info struct
  *
  * Return: void
  */
-void check_cmd(info_t *info)
+void find_cmd(info_t *info)
 {
 	char *path = NULL;
 	int i, k;
 
 	info->path = info->argv[0];
-	if (info->linecount_flag == 1)
+	if (info->linecount_boolean == 1)
 	{
 		info->line_count++;
-		info->linecount_flag = 0;
+		info->linecount_boolean = 0;
 	}
 	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!is_deli(info->arg[i], " \t\n"))
+		if (!is_conf(info->arg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = check_path(info, _get_environ(info, "PATH="), info->argv[0]);
+	path = find_path(info, _getenv(info, "PATH="), info->argv[0]);
 	if (path)
 	{
 		info->path = path;
-		copy_cmd(info);
+		fork_cmd(info);
 	}
 	else
 	{
-		if ((interactives(info) || _get_environ(info, "PATH=")
-					|| info->argv[0][0] == '/') && is_cmds(info, info->argv[0]))
-			copy_cmd(info);
+		if ((interactive(info) || _getenv(info, "PATH=")
+					|| info->argv[0][0] == '/') && is_cmd(info, info->argv[0]))
+			fork_cmd(info);
 		else if (*(info->arg) != '\n')
 		{
 			info->status = 127;
-			print_erro(info, "not found\n");
+			print_error(info, "not found\n");
+		}
+	}
+}
+
+/**
+ * fork_cmd - forks a an exec thread to run cmd
+ * @info: the parameter & return info struct
+ *
+ * Return: void
+ */
+void fork_cmd(info_t *info)
+{
+	pid_t child_pid;
+
+	child_pid = fork();
+	if (child_pid == -1)
+	{
+		pErr("Error:");
+		return;
+	}
+	if (child_pid == 0)
+	{
+		if (execve(info->path, info->argv, get_environ(info)) == -1)
+		{
+			free_info(info, 1);
+			if (errno == EACCES)
+				exit(126);
+			exit(1);
+		}
+		
+	}
+	else
+	{
+		wait(&(info->status));
+		if (WIFEXITED(info->status))
+		{
+			info->status = WEXITSTATUS(info->status);
+			if (info->status == 126)
+				print_error(info, "Permission denied\n");
 		}
 	}
 }
