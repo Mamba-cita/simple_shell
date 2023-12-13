@@ -15,10 +15,10 @@ void exec_cmd(char *full_path, char **argv)
 }
 
 /**
- * forkNwait - Fork a child process and wait for it to finish
+ * child_fork_wait - Fork a child process and wait for it to finish
  * @func: The function to execute in the child process
  */
-void forkNwait(struct func *func)
+void child_fork_wait(struct func *func)
 {
 	if (fork_func() == 0)
 		run_func(func);
@@ -26,7 +26,7 @@ void forkNwait(struct func *func)
 		wait(0);
 }
 /**
- * searchNexecute_cmd - Search for and execute a command in the PATH
+ * get_cmd - Search for and execute a command in the PATH
  * @command_name: The command to search for
  * @argv: The arguments for the command
  *
@@ -35,7 +35,7 @@ void forkNwait(struct func *func)
  * message and exits with an error code.
  */
 
-void searchNexecute_cmd(char *command_name, char **argv)
+void get_cmd(char *command_name, char **argv)
 {
 	int command_number = 0;
 	char *path_env = getenv("PATH");
@@ -78,22 +78,22 @@ void run_func(struct func *func)
 		if (strchr(efunc->argv[0], '/'))
 			exec_cmd(efunc->argv[0], efunc->argv);
 		else
-			searchNexecute_cmd(efunc->argv[0], efunc->argv);
+			get_cmd(efunc->argv[0], efunc->argv);
 		break;
 	}
 	case LIST:
 	{
-		struct listfunc *lfunc = (struct listfunc *)func;
+		struct col_list_func *lfunc = (struct col_list_func *)func;
 
-		forkNwait(lfunc->left);
-		forkNwait(lfunc->right);
+		child_fork_wait(lfunc->left);
+		child_fork_wait(lfunc->right);
 		break;
 	}
 	case BACK:
 	{
-		struct backfunc *bfunc = (struct backfunc *)func;
+		struct revers_col *bfunc = (struct revers_col *)func;
 
-		forkNwait(bfunc->func);
+		child_fork_wait(bfunc->func);
 		break;
 	}
 	default:

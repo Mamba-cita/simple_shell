@@ -17,19 +17,19 @@ struct func *execfunc(void)
 }
 
 /**
- * listfunc - Allocates and initializes a listfunc struct
- * @left: The left subfunction
- * @right: The right subfunction
- * Return: A pointer to the newly allocated listfunc struct
+ * col_list_func - Allocates and initializes a col_list_func struct
+ * @left: The left sub_fun_col
+ * @right: The right sub_fun_col
+ * Return: A pointer to the newly allocated col_list_func struct
  */
-struct func *listfunc(struct func *left, struct func *right)
+struct func *col_list_func(struct func *left, struct func *right)
 {
-	struct listfunc *func;
+	struct col_list_func *func;
 
-	func = malloc(sizeof(struct listfunc));
+	func = malloc(sizeof(struct col_list_func));
 	if (!func)
 		panicerror("malloc failed");
-	memset(func, 0, sizeof(struct listfunc));
+	memset(func, 0, sizeof(struct col_list_func));
 	func->type = LIST;
 	func->left = left;
 	func->right = right;
@@ -37,20 +37,20 @@ struct func *listfunc(struct func *left, struct func *right)
 }
 
 /**
- * backfunc - Allocates and initializes a backfunc struct.
- * @subfunc: The subfunction to run in the background
- * Return: A pointer to the newly allocated backfunc struct
+ * revers_col - Allocates and initializes a revers_col struct.
+ * @sub_func: The sub_fun_col to run in the background
+ * Return: A pointer to the newly allocated revers_col struct
  */
-struct func *backfunc(struct func *subfunc)
+struct func *revers_col(struct func *sub_func)
 {
-	struct backfunc *func;
+	struct revers_col *func;
 
-	func = malloc(sizeof(struct backfunc));
+	func = malloc(sizeof(struct revers_col));
 	if (!func)
 		panicerror("malloc failed");
-	memset(func, 0, sizeof(struct backfunc));
+	memset(func, 0, sizeof(struct revers_col));
 	func->type = BACK;
-	func->func = subfunc;
+	func->func = sub_func;
 	return ((struct func *)func);
 }
 
@@ -73,6 +73,6 @@ struct func *parse_func(char *s)
 		printf("leftovers: %s\n", s);
 		panicerror("syntax");
 	}
-	nulterminate(func);
+	null_char(func);
 	return ((struct func *)func);
 }

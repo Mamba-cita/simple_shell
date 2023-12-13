@@ -1,6 +1,6 @@
 #include "linux.h"
 /**
- * nulterminate - structure for null-terminstion of strings
+ * null_char - structure for null-terminstion of strings
  * @func: Pointer to the function to be executed.
  * Return: Pointer to the function to be executed.
  *
@@ -8,12 +8,12 @@
  * strings within a given data structure represented
  * by the struct func and its derived structures.
  */
-struct func *nulterminate(struct func *func)
+struct func *null_char(struct func *func)
 {
 	int x;
-	struct backfunc *bfunc;
+	struct revers_col *bfunc;
 	struct execfunc *efunc;
-	struct listfunc *lfunc;
+	struct col_list_func *lfunc;
 
 	if (func == 0)
 		return (0);
@@ -27,14 +27,14 @@ struct func *nulterminate(struct func *func)
 		break;
 
 	case LIST:
-		lfunc = (struct listfunc *)func;
-		nulterminate(lfunc->left);
-		nulterminate(lfunc->right);
+		lfunc = (struct col_list_func *)func;
+		null_char(lfunc->left);
+		null_char(lfunc->right);
 		break;
 
 	case BACK:
-		bfunc = (struct backfunc *)func;
-		nulterminate(bfunc->func);
+		bfunc = (struct revers_col *)func;
+		null_char(bfunc->func);
 		break;
 	}
 	return (func);

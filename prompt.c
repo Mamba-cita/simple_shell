@@ -18,7 +18,7 @@ int main(void)
 
 			if (strlen(buffer) > 2)
 				path = buffer + 3;
-			changedirectory(path);
+			navdir(path);
 		}
 		else if (buffer[0] == 'e' && buffer[1] == 'x'
 		&& buffer[2] == 'i' && buffer[3] == 't')

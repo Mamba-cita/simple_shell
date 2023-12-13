@@ -103,12 +103,12 @@ struct func *parseline(char **ps, char *es)
 	while (peek(ps, es, "&"))
 	{
 		gettoken(ps, es, 0, 0);
-		func = backfunc(func);
+		func = revers_col(func);
 	}
 	if (peek(ps, es, ";"))
 	{
 		gettoken(ps, es, 0, 0);
-		func = listfunc(func, parseline(ps, es));
+		func = col_list_func(func, parseline(ps, es));
 	}
 	return (func);
 }

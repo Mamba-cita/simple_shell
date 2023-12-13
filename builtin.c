@@ -1,17 +1,17 @@
 #include "linux.h"
 /**
- * changedirectory - function changes the current working
+ * navdir - function changes the current working
  * directory to the specified path.
- * @pathdir: Path to the current working directory.
+ * @path_dirname: Path to the current working directory.
  *
  * Description: function changes the current working
  * directory to the specified path.
  */
-void changedirectory(char *pathdir)
+void navdir(char *path_dirname)
 {
-	if (pathdir == NULL)
+	if (path_dirname == NULL)
 		chdir(getenv("HOME"));
-	else if (strcmp(pathdir, "-") == 0)
+	else if (strcmp(path_dirname, "-") == 0)
 	{
 		char *oldpwd = getenv("OLDPWD");
 
@@ -26,23 +26,23 @@ void changedirectory(char *pathdir)
 	}
 	else
 	{
-		char *currentDir = getcwd(NULL, 0);
+		char *cur_dir = getcwd(NULL, 0);
 
-		chdir(pathdir);
-		setenv("OLDPWD", currentDir, 1);
-		free(currentDir);
+		chdir(path_dirname);
+		setenv("OLDPWD", cur_dir, 1);
+		free(cur_dir);
 	}
 }
 /**
  * myexit - This function exits the shell.
- * @exitargument: Pointer the exit argument provided.
+ * @dir_exit: Pointer the exit argument provided.
  *
  * Description: Function exits the shell.
  */
-void myexit(char *exitargument)
+void myexit(char *dir_exit)
 {
-	if (exitargument != NULL)
-		exit(atoi(exitargument));
+	if (dir_exit != NULL)
+		exit(atoi(dir_exit));
 	else
 		exit(0);
 }
